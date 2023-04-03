@@ -1,33 +1,67 @@
-<!DOCTYPE html>
 
-<html>
-  <head>
-    <link rel="stylesheet" href="styles.css" />
-    <link
-      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css"
-      rel="stylesheet"
-      integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD"
-      crossorigin="anonymous"
-    />
-  </head>
+<table>
+  <thead>
+    <tr>
+      <th>Promise</th>
+      <th>Time taken to resolve (seconds)</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td colspan="2">Loading...</td>
+    </tr>
+  </tbody>
+</table>
 
-  <body>
-    <!-- the entire body must be written by student -->
-    <table class="table table-striped table-hover table-bordered">
-      <thead>
-        <tr>
-          <th>Promise Name</th>
-          <th>Time taken (s)</th>
-        </tr>
-      </thead>
-      <tbody id="output"></tbody>
-    </table>
+<script>
+  const promises = [
+    new Promise(resolve => {
+      const time = Math.floor(Math.random() * 3000) + 1000;
+      setTimeout(() => {
+        resolve(time);
+      }, time);
+    }),
+    new Promise(resolve => {
+      const time = Math.floor(Math.random() * 3000) + 1000;
+      setTimeout(() => {
+        resolve(time);
+      }, time);
+    }),
+    new Promise(resolve => {
+      const time = Math.floor(Math.random() * 3000) + 1000;
+      setTimeout(() => {
+        resolve(time);
+      }, time);
+    })
+  ];
 
-    <script type="text/javascript" src="./script.js"></script>
-    <script
-      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"
-      integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN"
-      crossorigin="anonymous"
-    ></script>
-  </body>
-</html>
+  Promise.all(promises)
+    .then(times => {
+      const table = document.querySelector('table');
+      const tbody = table.querySelector('tbody');
+      tbody.innerHTML = '';
+      times.forEach((time, index) => {
+        const promiseName = `Promise ${index + 1}`;
+        const row = document.createElement('tr');
+        const nameCell = document.createElement('td');
+        const timeCell = document.createElement('td');
+        nameCell.textContent = promiseName;
+        timeCell.textContent = (time / 1000).toFixed(3);
+        row.appendChild(nameCell);
+        row.appendChild(timeCell);
+        tbody.appendChild(row);
+      });
+      const total = times.reduce((acc, time) => acc + time, 0);
+      const totalRow = document.createElement('tr');
+      const totalNameCell = document.createElement('td');
+      const totalTimeCell = document.createElement('td');
+      totalNameCell.textContent = 'Total';
+      totalTimeCell.textContent = (total / 1000).toFixed(3);
+      totalRow.appendChild(totalNameCell);
+      totalRow.appendChild(totalTimeCell);
+      tbody.appendChild(totalRow);
+      const loadingRow = table.querySelector('tbody tr');
+      loadingRow.parentNode.removeChild(loadingRow);
+    });
+</script>
+
